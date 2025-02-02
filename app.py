@@ -6,11 +6,19 @@ import os
 
 file_id = "1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0"
 url ='https://drive.google.com/file/d/{file_id}/view?usp=sharing'
-model_path = "trained_plant_disease_model.keras"
+model_path ="trained_plant_disease_model.keras"
 
 if not os.path.exists(model_path):
     st.warning("Downloading model from Google Drive...")
     gdown.download(url, model_path, quiet=False)
+else:
+    st.success(f"Model found at: {model_path}")
+
+# Verify file exists
+if os.path.exists(model_path):
+    st.success(f"Model successfully saved as {model_path}")
+else:
+    st.error(f"Failed to download the model. Check the URL or file ID.")
 
 
 def model_prediction(test_image):
