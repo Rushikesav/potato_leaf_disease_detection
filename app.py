@@ -17,7 +17,7 @@ if os.path.exists(model_path):
     file_size = os.path.getsize(model_path)
     st.success(f"Model downloaded successfully! File size: {file_size} bytes")
     
-    if file_size < 1000:  # If too small, it might be an HTML error file
+    if file_size < 89200000:  # If too small, it might be an HTML error file
         st.error("The downloaded file is too small. It might not be the correct model file.")
 else:
     st.error("Model file was not found after download. Please check the URL or file permissions.")
