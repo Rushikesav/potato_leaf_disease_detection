@@ -5,7 +5,7 @@ import gdown
 import os
 
 file_id = "1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0"
-url ='https://drive.google.com/uc?id={file_id}&export=download'
+url ='https://drive.google.com/file/d/1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0/view?usp=drivesdk'
 model_path ="trained_plant_disease_model.keras"
 
 
