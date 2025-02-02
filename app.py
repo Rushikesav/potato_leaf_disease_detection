@@ -11,14 +11,17 @@ model_path ="trained_plant_disease_model.keras"
 if not os.path.exists(model_path):
     st.warning("Downloading model from Google Drive...")
     gdown.download(url, model_path, quiet=False)
-else:
-    st.success(f"Model found at: {model_path}")
 
-# Verify file exists
+# Check if model was downloaded correctly
 if os.path.exists(model_path):
-    st.success(f"Model successfully saved as {model_path}")
+    file_size = os.path.getsize(model_path)
+    st.success(f"Model downloaded successfully! File size: {file_size} bytes")
+    
+    if file_size < 1000:  # If too small, it might be an HTML error file
+        st.error("The downloaded file is too small. It might not be the correct model file.")
 else:
-    st.error(f"Failed to download the model. Check the URL or file ID.")
+    st.error("Model file was not found after download. Please check the URL or file permissions.")
+
 
 
 def model_prediction(test_image):
