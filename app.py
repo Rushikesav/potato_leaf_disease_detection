@@ -122,3 +122,5 @@ elif(app_mode == "PROJECT DETAILS"):
     - **Real-time Detection**: Integrate with drones or mobile devices for real-time disease detection.
     - **Data Collection**: Incorporate user feedback to improve model accuracy.
     """)
+else:
+    blink.empty()
