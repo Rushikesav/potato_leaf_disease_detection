@@ -3,6 +3,7 @@ import tensorflow as tf
 import numpy as np
 import gdown
 import os
+import time
 
 file_id ="1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0"
 url ='https://drive.google.com/uc?id=1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0'
@@ -49,6 +50,15 @@ st.image(img)
 #Main Page
 if(app_mode=="HOME"):
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
+    blink = st.empty()  # Create a placeholder for the blinking message
+
+    for i in range(10):  # Loop to make the message blink 10 times
+        if i % 2 == 0:
+            blink.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the dropdown above to get started! 👈</h3>", unsafe_allow_html=True)
+        else:
+            blink.markdown("")  # Clear the message to create blinking effect
+        
+        time.sleep(0.5)
    
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
