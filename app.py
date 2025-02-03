@@ -57,7 +57,7 @@ if(app_mode=="HOME"):
         blink.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the sidebar to get started! 👈</h3>", unsafe_allow_html=True)
         time.sleep(2)  # Show message for 0.5 seconds
         blink.markdown("")  # Clear the message to create blinking effect
-        time.sleep(1)  # Wait before showing the message again
+        time.sleep(0.5)  # Wait before showing the message again
     
   
 #Prediction Page
