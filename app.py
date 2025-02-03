@@ -50,16 +50,16 @@ st.image(img)
 #Main Page
 if(app_mode=="HOME"):
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
+    # Blinking message logic (infinite loop)
     blink = st.empty()  # Create a placeholder for the blinking message
 
-    for i in range(10):  # Loop to make the message blink 10 times
-        if i % 2 == 0:
-            blink.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the dropdown above to get started! 👈</h3>", unsafe_allow_html=True)
-        else:
-            blink.markdown("")  # Clear the message to create blinking effect
-        
-        time.sleep(3)
-   
+    while True: # Blinking message logic (infinite loop)
+        blink.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the sidebar to get started! 👈</h3>", unsafe_allow_html=True)
+        time.sleep(0.5)  # Show message for 0.5 seconds
+        blink.markdown("")  # Clear the message to create blinking effect
+        time.sleep(0.5)  # Wait before showing the message again
+    
+  
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
     st.header("Plant Disease Detection System for Sustainable Agriculture")
