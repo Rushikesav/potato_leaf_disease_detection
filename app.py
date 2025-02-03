@@ -58,7 +58,7 @@ if(app_mode=="HOME"):
         else:
             blink.markdown("")  # Clear the message to create blinking effect
         
-        time.sleep(0.5)
+        time.sleep(3)
    
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
