@@ -59,7 +59,7 @@ if(app_mode=="HOME"):
     # Blinking message logic (infinite loop)
     blink = st.empty()  # Create a placeholder for the blinking message
 
-    while True: # Blinking message logic (infinite loop)
+    for i in range(1000):
         blink.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the sidebar to get started! 👈</h3>", unsafe_allow_html=True)
         time.sleep(1.5)  # Show message for 0.5 seconds
         blink.markdown("")  # Clear the message to create blinking effect
