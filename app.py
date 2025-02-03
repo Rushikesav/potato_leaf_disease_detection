@@ -3,7 +3,6 @@ import tensorflow as tf
 import numpy as np
 import gdown
 import os
-import time
 
 file_id ="1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0"
 url ='https://drive.google.com/uc?id=1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0'
@@ -38,9 +37,7 @@ def model_prediction(test_image):
 st.sidebar.title("Plant Disease Detection System for Sustainable Agriculture")
 app_mode = st.sidebar.selectbox("Select Page",["HOME","DISEASE RECOGNITION","PROJECT DETAILS"])
 #app_mode = st.sidebar.selectbox("Select Page",["Home"," ","Disease Recognition","PROJECT DETAILS"])
-if "app_mode" not in st.session_state:
-    st.session_state.app_mode = "HOME"
-    
+  
 main_content = st.empty()
 
 # import Image from pillow to open images
@@ -53,23 +50,12 @@ st.image(img)
 
 #Main Page
 if(app_mode=="HOME"):
-    st.session_state.app_mode = "HOME"
     main_content.empty()
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
-    # Blinking message logic (infinite loop)
-    blink = st.empty()  # Create a placeholder for the blinking message
+    st.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the sidebar to get started! 👈</h3>", unsafe_allow_html=True)
 
-    for i in range(1000):
-        blink.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the sidebar to get started! 👈</h3>", unsafe_allow_html=True)
-        time.sleep(1.5)  # Show message for 0.5 seconds
-        blink.markdown("")  # Clear the message to create blinking effect
-        time.sleep(0.5)  # Wait before showing the message again
-        if st.session_state.get("app_mode") != "HOME":
-                break
-  
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
-    st.session_state.app_mode = "DISEASE RECOGNITION"
     main_content.empty()
     st.header("Plant Disease Detection System for Sustainable Agriculture")
     st.markdown('This app detects the potato leaf disease with upto 93 percent accuracy')
@@ -95,7 +81,6 @@ elif(app_mode=="DISEASE RECOGNITION"):
 
 # Project Details Page
 elif(app_mode == "PROJECT DETAILS"):
-    st.session_state.app_mode = "PROJECT DETAILS"
     main_content.empty()
     st.title("Project Details and Model Working")
     
