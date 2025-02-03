@@ -49,6 +49,30 @@ st.image(img)
 #Main Page
 if(app_mode=="HOME"):
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
+
+elif app_mode == "PROJECT DETAILS":
+    st.header("Project Overview")
+    st.write("""
+    This project uses a **deep learning model** trained on potato leaf images to identify plant diseases with up to **93% accuracy**.
+    
+    **How It Works:**
+    - The user uploads an image of a potato leaf.
+    - The model processes the image and classifies it into three categories:
+      1. **Potato Early Blight**
+      2. **Potato Late Blight**
+      3. **Healthy Potato Leaf**
+    - The prediction is displayed on the screen.
+
+    **Model Details:**
+    - The model is built using **TensorFlow and Keras**.
+    - It is trained on a dataset of potato leaves with different disease conditions.
+    - The model uses **Convolutional Neural Networks (CNNs)** to analyze image patterns.
+
+    **Why This Project?**
+    - Helps farmers quickly detect diseases in potato crops.
+    - Reduces the need for expert consultation.
+    - Supports sustainable agriculture by early disease detection.
+    """)
     
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
