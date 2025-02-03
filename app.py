@@ -50,7 +50,7 @@ st.image(img)
 
 #Main Page
 if(app_mode=="HOME"):
-    main_content = st.empty()
+    main_content.empty()
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
     # Blinking message logic (infinite loop)
     blink = st.empty()  # Create a placeholder for the blinking message
@@ -65,7 +65,7 @@ if(app_mode=="HOME"):
   
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
-    main_content = st.empty()
+    main_content.empty()
     st.header("Plant Disease Detection System for Sustainable Agriculture")
     st.markdown('This app detects the potato leaf disease with upto 93 percent accuracy')
     test_image = st.file_uploader("Choose an Image:")
@@ -90,7 +90,7 @@ elif(app_mode=="DISEASE RECOGNITION"):
 
 # Project Details Page
 elif(app_mode == "PROJECT DETAILS"):
-    main_content = st.empty()
+    main_content.empty()
     st.title("Project Details and Model Working")
     
     st.header("1. Introduction")
