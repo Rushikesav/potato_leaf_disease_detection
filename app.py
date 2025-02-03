@@ -58,7 +58,8 @@ if(app_mode=="HOME"):
         time.sleep(1.5)  # Show message for 0.5 seconds
         blink.markdown("")  # Clear the message to create blinking effect
         time.sleep(0.5)  # Wait before showing the message again
-    
+        if st.session_state.get("app_mode") != "HOME":
+                break
   
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
