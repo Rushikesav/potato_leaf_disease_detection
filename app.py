@@ -50,7 +50,7 @@ st.image(img)
 if(app_mode=="HOME"):
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
 
-elif (app_mode == "PROJECT DETAILS"):
+elif(app_mode == "PROJECT DETAILS"):
     st.header("Project Overview")
     st.write("""
     This project uses a **deep learning model** trained on potato leaf images to identify plant diseases with up to **93% accuracy**.
