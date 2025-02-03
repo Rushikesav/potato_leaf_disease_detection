@@ -37,7 +37,7 @@ def model_prediction(test_image):
 st.markdown("<h1 style='text-align: center; color: green;'>🌱 Plant Disease Detection System 🌱</h1>", unsafe_allow_html=True)
 
 # Main navigation using selectbox
-page = st.selectbox("Choose a Page:", ["Home", "Disease Recognition", "Project Details"])
+app_mode = st.selectbox("Choose a Page:", ["Home", "Disease Recognition", "Project Details"])
 
 # ------------------------- HOME PAGE -------------------------
 
