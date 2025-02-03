@@ -38,6 +38,9 @@ def model_prediction(test_image):
 st.sidebar.title("Plant Disease Detection System for Sustainable Agriculture")
 app_mode = st.sidebar.selectbox("Select Page",["HOME","DISEASE RECOGNITION","PROJECT DETAILS"])
 #app_mode = st.sidebar.selectbox("Select Page",["Home"," ","Disease Recognition","PROJECT DETAILS"])
+if "app_mode" not in st.session_state:
+    st.session_state.app_mode = "HOME"
+    
 main_content = st.empty()
 
 # import Image from pillow to open images
@@ -50,6 +53,7 @@ st.image(img)
 
 #Main Page
 if(app_mode=="HOME"):
+    st.session_state.app_mode = "HOME"
     main_content.empty()
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
     # Blinking message logic (infinite loop)
@@ -65,6 +69,7 @@ if(app_mode=="HOME"):
   
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
+    st.session_state.app_mode = "DISEASE RECOGNITION"
     main_content.empty()
     st.header("Plant Disease Detection System for Sustainable Agriculture")
     st.markdown('This app detects the potato leaf disease with upto 93 percent accuracy')
@@ -90,6 +95,7 @@ elif(app_mode=="DISEASE RECOGNITION"):
 
 # Project Details Page
 elif(app_mode == "PROJECT DETAILS"):
+    st.session_state.app_mode = "PROJECT DETAILS"
     main_content.empty()
     st.title("Project Details and Model Working")
     
