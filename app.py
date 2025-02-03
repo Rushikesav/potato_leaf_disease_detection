@@ -49,43 +49,66 @@ st.image(img)
 #Main Page
 if(app_mode=="HOME"):
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
-
-elif(app_mode == "PROJECT DETAILS"):
-    st.header("Project Overview")
-    st.write("""
-    This project uses a **deep learning model** trained on potato leaf images to identify plant diseases with up to **93% accuracy**.
-    
-    **How It Works:**
-    - The user uploads an image of a potato leaf.
-    - The model processes the image and classifies it into three categories:
-      1. **Potato Early Blight**
-      2. **Potato Late Blight**
-      3. **Healthy Potato Leaf**
-    - The prediction is displayed on the screen.
-
-    **Model Details:**
-    - The model is built using **TensorFlow and Keras**.
-    - It is trained on a dataset of potato leaves with different disease conditions.
-    - The model uses **Convolutional Neural Networks (CNNs)** to analyze image patterns.
-
-    **Why This Project?**
-    - Helps farmers quickly detect diseases in potato crops.
-    - Reduces the need for expert consultation.
-    - Supports sustainable agriculture by early disease detection.
-    """)
-    
+   
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
     st.header("Plant Disease Detection System for Sustainable Agriculture")
     st.markdown('This app detects the potato leaf disease with upto 93 percent accuracy')
     test_image = st.file_uploader("Choose an Image:")
     if(st.button("Show Image")):
-        st.image(test_image,width=4,use_container_width=True)
+        if test_image:
+            st.image(test_image,width=4,use_container_width=True)
+        else:
+            st.warning("Please upload an image first.")
+        
     #Predict button
     if(st.button("Predict")):
-        st.snow()
-        st.write("Our Prediction")
-        result_index = model_prediction(test_image)
-        #Reading Labels
-        class_name = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']
-        st.success("Model is Predicting it's a {}".format(class_name[result_index]))
+        if test_image:
+            st.snow()
+            st.write("Our Prediction:")
+            result_index = model_prediction(test_image)
+            
+            # Class labels
+            class_names = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']
+            st.success(f"Model is predicting: **{class_names[result_index]}**")
+        else:
+            st.warning("Please upload an image first.")
+
+# Project Details Page
+elif app_mode == "PROJECT DETAILS":
+    st.title("Project Details and Model Working")
+    
+    st.header("1. Introduction")
+    st.markdown("""
+    The **Plant Disease Detection System** is an AI-powered tool designed to detect diseases in potato leaves.
+    Using machine learning techniques, particularly deep learning, the model achieves up to **93% accuracy** in identifying:
+    - **Early Blight**
+    - **Late Blight**
+    - **Healthy leaves**
+    """)
+    
+    st.header("2. How the Model Works")
+    st.markdown("""
+    The model uses a **Convolutional Neural Network (CNN)**, a type of deep learning algorithm particularly effective for image classification tasks.
+    
+    **Steps:**
+    1. **Preprocessing**: The uploaded image is resized to **128x128 pixels** to match the input size expected by the model.
+    2. **Model Prediction**:
+       - The model predicts the likelihood of the image belonging to each disease category.
+       - The category with the highest probability is selected as the prediction.
+    3. **Output**: The predicted class (e.g., **Potato___Early_blight**) is displayed to the user.
+    """)
+
+    st.header("3. Technologies Used")
+    st.markdown("""
+    - **TensorFlow/Keras** for building and training the deep learning model.
+    - **Streamlit** for creating an interactive web interface.
+    - **Google Drive** integration using **gdown** for downloading the trained model.
+    """)
+
+    st.header("4. Future Enhancements")
+    st.markdown("""
+    - **Expand to Other Crops**: Extend the model to detect diseases in other crops like tomatoes, wheat, etc.
+    - **Real-time Detection**: Integrate with drones or mobile devices for real-time disease detection.
+    - **Data Collection**: Incorporate user feedback to improve model accuracy.
+    """)
