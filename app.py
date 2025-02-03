@@ -35,7 +35,7 @@ def model_prediction(test_image):
 
 #Sidebar
 st.sidebar.title("Plant Disease Detection System for Sustainable Agriculture")
-app_mode = st.sidebar.selectbox("Select Page",["HOME","DISEASE RECOGNITION"])
+app_mode = st.sidebar.selectbox("Select Page",["HOME","DISEASE RECOGNITION","PROJECT DETAILS"])
 #app_mode = st.sidebar.selectbox("Select Page",["Home"," ","Disease Recognition"])
 
 # import Image from pillow to open images
@@ -75,7 +75,7 @@ elif(app_mode=="DISEASE RECOGNITION"):
             st.warning("Please upload an image first.")
 
 # Project Details Page
-elif app_mode == "PROJECT DETAILS":
+elif(app_mode == "PROJECT DETAILS"):
     st.title("Project Details and Model Working")
     
     st.header("1. Introduction")
