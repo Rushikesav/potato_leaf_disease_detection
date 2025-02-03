@@ -4,8 +4,8 @@ import numpy as np
 import gdown
 import os
 
-file_id ="1pltreZmeLaEh53X3ac391dGZvNNwBmrv"
-url ='https://drive.google.com/file/d/1pltreZmeLaEh53X3ac391dGZvNNwBmrv/view?usp=drivesdk'
+file_id ="1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0"
+url ='https://drive.google.com/uc?id=1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0'
 model_path ="trained_plant_disease_model.keras"
 
 
