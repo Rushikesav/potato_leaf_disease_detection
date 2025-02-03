@@ -33,13 +33,10 @@ def model_prediction(test_image):
     predictions = model.predict(input_arr)
     return np.argmax(predictions) #return index of max element
 
-# ------------------------- MAIN NAVIGATION -------------------------
-st.markdown("<h1 style='text-align: center; color: green;'>🌱 Plant Disease Detection System 🌱</h1>", unsafe_allow_html=True)
-
-# Main navigation using selectbox
-app_mode = st.selectbox("Choose a Page:", ["Home", "Disease Recognition", "Project Details"])
-
-# ------------------------- HOME PAGE -------------------------
+#Sidebar
+st.sidebar.title("Plant Disease Detection System for Sustainable Agriculture")
+app_mode = st.sidebar.selectbox("Select Page",["HOME","DISEASE RECOGNITION","PROJECT DETAILS"])
+#app_mode = st.sidebar.selectbox("Select Page",["Home"," ","Disease Recognition","PROJECT DETAILS"])
 
 # import Image from pillow to open images
 from PIL import Image
