@@ -53,6 +53,14 @@ if(app_mode=="HOME"):
     main_content.empty()
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
     st.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the sidebar to get started! 👈</h3>", unsafe_allow_html=True)
+    moving_link = """
+        <marquee behavior="scroll" direction="left" scrollamount="5" style="color: blue; font-size: 20px;">
+            👉 <a href="https://github.com/Rushikesav/Test-data/tree/main/3.Potato%20Leaf%20Disease%20Detection/dataset/Test" style="text-decoration: none; color: blue;">
+           Click here to download the test data to test the model.🌱
+            </a> 👈
+        </marquee>
+        """
+    st.markdown(moving_link, unsafe_allow_html=True)
 
 #Prediction Page
 elif(app_mode=="DISEASE RECOGNITION"):
