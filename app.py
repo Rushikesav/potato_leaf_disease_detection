@@ -75,7 +75,7 @@ if(app_mode=="HOME"):
         <marquee behavior="scroll" direction="left" scrollamount="5">
             <span class="glow">✨</span> 
             <a href="https://github.com/Rushikesav/Test-data/tree/main/3.Potato%20Leaf%20Disease%20Detection/dataset/Test" target="_blank" style="text-decoration: none; color: blue;">
-                Click here to learn more about Plant Disease Detection! 🌿
+                Click here to download the test data to test the model! 🌿
             </a> 
             <span class="glow">✨</span>
         </marquee>
