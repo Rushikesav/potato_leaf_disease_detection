@@ -54,12 +54,34 @@ if(app_mode=="HOME"):
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture", unsafe_allow_html=True)
     st.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the sidebar to get started! 👈</h3>", unsafe_allow_html=True)
     moving_link = """
-        <marquee behavior="scroll" direction="left" scrollamount="5" style="color: blue; font-size: 20px;">
-            new <a href="https://github.com/Rushikesav/Test-data/tree/main/3.Potato%20Leaf%20Disease%20Detection/dataset/Test" style="text-decoration: none; color: blue;">
-           Click here to download the test data to test the model.🌱
+        <style>
+            .glow {
+                font-size: 20px;
+                color: #00FFFF;
+                text-align: center;
+                animation: glow-effect 1s infinite alternate;
+            }
+            
+            @keyframes glow-effect {
+                from {
+                    text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 20px #00FFFF;
+                }
+                to {
+                    text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF, 0 0 30px #00FFFF;
+                }
+            }
+        </style>
+        
+        <marquee behavior="scroll" direction="left" scrollamount="5">
+            <span class="glow">✨</span> 
+            <a href="https://github.com/Rushikesav/Test-data/tree/main/3.Potato%20Leaf%20Disease%20Detection/dataset/Test" target="_blank" style="text-decoration: none; color: blue;">
+                Click here to learn more about Plant Disease Detection! 🌿
             </a> 
+            <span class="glow">✨</span>
         </marquee>
         """
+        
+        
     st.markdown(moving_link, unsafe_allow_html=True)
 
 #Prediction Page
