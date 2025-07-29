@@ -5,154 +5,120 @@ import gdown
 import os
 from PIL import Image
 
-# === Inject theme-aware CSS ===
-st.markdown("""
-    <style>
-    @media (prefers-color-scheme: dark) {
-        body {
-            background-color: #0e1117;
-            color: #fafafa;
-        }
-    }
-    @media (prefers-color-scheme: light) {
-        body {
-            background-color: #ffffff;
-            color: #000000;
-        }
-    }
-
-    /* Optional styling */
-    h1, h2, h3 {
-        text-align: center;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# === Model download setup ===
-file_id = "1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0"
-url = 'https://drive.google.com/uc?id=1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0'
+# Constants
+model_url = "https://drive.google.com/uc?id=1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0"
 model_path = "trained_plant_disease_model.keras"
 
+# Download model if not exists
 if not os.path.exists(model_path):
     st.warning("Downloading model from Google Drive...")
-    gdown.download(url, model_path, quiet=False)
+    gdown.download(model_url, model_path, quiet=False)
 
+# Verify model
 if os.path.exists(model_path):
     file_size = os.path.getsize(model_path)
-    st.success(f"Model downloaded successfully! File size: {file_size} bytes")
-    if file_size < 89200000:
-        st.error("The downloaded file is too small. It might not be the correct model file.")
+    st.success(f"Model downloaded successfully! File size: {file_size / 1_000_000:.2f} MB")
+    if file_size < 89_000_000:
+        st.error("Downloaded file seems too small. Possibly incorrect.")
 else:
-    st.error("Model file was not found after download. Please check the URL or file permissions.")
+    st.error("Model download failed. Please check the link or file permissions.")
 
-# === Prediction Function ===
+# Prediction function
 def model_prediction(test_image):
     model = tf.keras.models.load_model(model_path)
     image = tf.keras.preprocessing.image.load_img(test_image, target_size=(128, 128))
     input_arr = tf.keras.preprocessing.image.img_to_array(image)
-    input_arr = np.array([input_arr])
+    input_arr = np.expand_dims(input_arr, axis=0)
     predictions = model.predict(input_arr)
     return np.argmax(predictions)
 
-# === Sidebar ===
-st.sidebar.title("Plant Disease Detection System for Sustainable Agriculture")
-app_mode = st.sidebar.selectbox("Select Page", ["HOME", "DISEASE RECOGNITION", "PROJECT DETAILS"])
-main_content = st.empty()
+# Sidebar navigation
+st.sidebar.title("🌿 Plant Disease Detection")
+app_mode = st.sidebar.radio("Navigate", ["🏠 HOME", "🔬 DISEASE RECOGNITION", "📊 PROJECT DETAILS"])
 
-# === Display top banner image ===
-img = Image.open("Disease.png")
-st.image(img)
+# Banner Image
+st.image("Disease.png", use_column_width=True)
 
-# === Pages ===
-if app_mode == "HOME":
-    main_content.empty()
+# HOME
+if app_mode == "🏠 HOME":
     st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture</h1>", unsafe_allow_html=True)
     st.markdown("<h3 style='text-align: center; color: blue;'>👉 Select 'Disease Recognition' from the sidebar to get started! 👈</h3>", unsafe_allow_html=True)
 
     moving_link = """
-        <style>
-            .glow {
-                font-size: 20px;
-                color: #00FFFF;
-                text-align: center;
-                animation: glow-effect 1s infinite alternate;
-            }
-            @keyframes glow-effect {
-                from {
-                    text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 20px #00FFFF;
-                }
-                to {
-                    text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF, 0 0 30px #00FFFF;
-                }
-            }
-        </style>
-        <marquee behavior="scroll" direction="left" scrollamount="5">
-            <span class="glow">✨</span> 
-            <a href="https://github.com/Rushikesav/Test-data/tree/main/3.Potato%20Leaf%20Disease%20Detection/dataset/Test" target="_blank" style="text-decoration: none; color: blue;">
-                Click here to download the test data to test the model! 🌿
-            </a> 
-            <span class="glow">✨</span>
-        </marquee>
+    <style>
+        .glow {
+            font-size: 20px;
+            color: #00FFFF;
+            text-align: center;
+            animation: glow-effect 1s infinite alternate;
+        }
+        @keyframes glow-effect {
+            from {text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF;}
+            to {text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF;}
+        }
+    </style>
+    <marquee behavior="scroll" direction="left" scrollamount="5">
+        <span class="glow">✨</span> 
+        <a href="https://github.com/Rushikesav/Test-data/tree/main/3.Potato%20Leaf%20Disease%20Detection/dataset/Test" target="_blank" style="text-decoration: none; color: blue;">
+            Click here to download the test data to test the model! 🌿
+        </a> 
+        <span class="glow">✨</span>
+    </marquee>
     """
     st.markdown(moving_link, unsafe_allow_html=True)
 
-elif app_mode == "DISEASE RECOGNITION":
-    main_content.empty()
-    st.header("Plant Disease Detection System for Sustainable Agriculture")
-    st.markdown("This app detects the potato leaf disease with up to 93% accuracy")
-    
-    test_image = st.file_uploader("Choose an Image:")
+# DISEASE RECOGNITION
+elif app_mode == "🔬 DISEASE RECOGNITION":
+    st.header("Upload a Potato Leaf Image")
+    st.markdown('This model detects potato leaf disease with up to **93% accuracy**.')
+    test_image = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+
     if st.button("Show Image"):
         if test_image:
-            st.image(test_image, width=4, use_container_width=True)
+            st.image(test_image, use_column_width=True)
         else:
-            st.warning("Please upload an image first.")
-    
+            st.warning("Please upload an image.")
+
     if st.button("Predict"):
         if test_image:
             st.snow()
-            st.write("Our Prediction:")
-            result_index = model_prediction(test_image)
+            st.write("🔍 **Prediction Result:**")
+            index = model_prediction(test_image)
             class_names = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']
-            st.success(f"Model is predicting: **{class_names[result_index]}**")
+            st.success(f"**Model predicts:** {class_names[index]}")
         else:
-            st.warning("Please upload an image first.")
+            st.warning("Please upload an image.")
 
-elif app_mode == "PROJECT DETAILS":
-    main_content.empty()
+# PROJECT DETAILS
+elif app_mode == "📊 PROJECT DETAILS":
     st.title("Project Details and Model Working")
 
     st.header("1. Introduction")
     st.markdown("""
-    The **Plant Disease Detection System** is an AI-powered tool designed to detect diseases in potato leaves.
-    Using machine learning techniques, particularly deep learning, the model achieves up to **93% accuracy** in identifying:
+    This is an AI-powered system to detect potato leaf diseases. It helps farmers make informed decisions using:
     - **Early Blight**
     - **Late Blight**
-    - **Healthy leaves**
+    - **Healthy leaf** classification.
     """)
 
-    st.header("2. How the Model Works")
+    st.header("2. How It Works")
     st.markdown("""
-    The model uses a **Convolutional Neural Network (CNN)**, a type of deep learning algorithm particularly effective for image classification tasks.
-
-    **Steps:**
-    1. **Preprocessing**: The uploaded image is resized to **128x128 pixels** to match the input size expected by the model.
-    2. **Model Prediction**:
-       - The model predicts the likelihood of the image belonging to each disease category.
-       - The category with the highest probability is selected as the prediction.
-    3. **Output**: The predicted class (e.g., **Potato___Early_blight**) is displayed to the user.
+    - Uses **Convolutional Neural Networks (CNN)**
+    - Images resized to **128x128**
+    - Highest predicted class selected from 3 categories
     """)
 
-    st.header("3. Technologies Used")
+    st.header("3. Tech Stack")
     st.markdown("""
-    - **TensorFlow/Keras** for building and training the deep learning model.
-    - **Streamlit** for creating an interactive web interface.
-    - **Google Drive** integration using **gdown** for downloading the trained model.
+    - **TensorFlow/Keras**: Deep Learning Model
+    - **Streamlit**: Web Interface
+    - **gdown**: For Google Drive model download
     """)
 
-    st.header("4. Future Enhancements")
+    st.header("4. Future Scope")
     st.markdown("""
-    - **Expand to Other Crops**: Extend the model to detect diseases in other crops like tomatoes, wheat, etc.
-    - **Real-time Detection**: Integrate with drones or mobile devices for real-time disease detection.
-    - **Data Collection**: Incorporate user feedback to improve model accuracy.
+    - Add more crops and diseases
+    - Mobile and drone integration
+    - Real-time camera input
     """)
+
