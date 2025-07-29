@@ -37,7 +37,7 @@ st.sidebar.title("🌿 Plant Disease Detection")
 app_mode = st.sidebar.radio("Navigate", ["🏠 HOME", "🔬 DISEASE RECOGNITION", "📊 PROJECT DETAILS"])
 
 # Banner Image
-st.image("Disease.png", use_column_width=True)
+st.image("Disease.png", use_container_width=True)
 
 # HOME
 if app_mode == "🏠 HOME":
