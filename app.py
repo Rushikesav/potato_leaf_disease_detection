@@ -1,93 +1,94 @@
 import streamlit as st
 import tensorflow as tf
-from PIL import Image
 import numpy as np
+from PIL import Image
 import gdown
 import os
 
-# Set page config
-st.set_page_config(page_title="Potato Leaf Disease Detection", layout="centered")
-
-# Initialize session state
+# --------------------
+# Session State Setup
+# --------------------
 if "page" not in st.session_state:
     st.session_state.page = "HOME"
 
 if "model" not in st.session_state:
     st.session_state.model = None
 
-# Detect light or dark mode (Streamlit >=1.46)
-theme = st.get_option("theme.base")
-is_dark = theme == "dark"
+# --------------------
+# Theme Detection (optional)
+# --------------------
+try:
+    from streamlit import runtime
+    ctx = runtime.scriptrunner.get_script_run_ctx()
+    if ctx:
+        theme = st.get_option("theme")
+        is_dark = theme and theme.get("base") == "dark"
+    else:
+        is_dark = False
+except:
+    is_dark = False
 
-# Download model if not exists
-MODEL_PATH = "potato_model.h5"
-GDRIVE_URL = "https://drive.google.com/uc?id=1DBXxD2KYRWi7AR8-MklXet5d1B1jydqI"
+# --------------------
+# Page Navigation
+# --------------------
+st.sidebar.title("Navigation")
+st.session_state.page = st.sidebar.selectbox("Go to", ["HOME", "DISEASE RECOGNITION"])
+
+# --------------------
+# Model Download
+# --------------------
+MODEL_URL = 'https://drive.google.com/uc?id=1-sUInltdD8Uocf3L_z5a8ZyoYJfr3Q0D'
+MODEL_PATH = 'potato_model.h5'
 
 def download_model():
     if not os.path.exists(MODEL_PATH):
         with st.spinner("Downloading model..."):
-            gdown.download(GDRIVE_URL, MODEL_PATH, quiet=False)
+            gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
 
-def load_model():
-    download_model()
-    return tf.keras.models.load_model(MODEL_PATH)
-
-# Sidebar navigation
-st.session_state.page = st.sidebar.selectbox("Select Page", ["HOME", "DISEASE RECOGNITION", "PROJECT DETAILS"])
-
+# --------------------
 # HOME PAGE
+# --------------------
 if st.session_state.page == "HOME":
-    st.title("🍃 Potato Leaf Disease Detection")
+    st.title("🥔 Potato Leaf Disease Detection")
     st.markdown("""
-    Welcome to the Potato Disease Detection App.
+        Welcome to the Potato Leaf Disease Detection App.
 
-    Navigate to **DISEASE RECOGNITION** to identify potato leaf diseases using AI.
-    
-    Developed using TensorFlow and Streamlit.
+        Upload an image of a potato leaf to detect possible diseases using a trained deep learning model.
+
+        Navigate to **DISEASE RECOGNITION** from the sidebar to get started.
     """)
+    st.image("https://upload.wikimedia.org/wikipedia/commons/2/2f/Potato_Leaf_Curl.jpg", width=400)
 
-# DISEASE RECOGNITION
+# --------------------
+# DISEASE RECOGNITION PAGE
+# --------------------
 elif st.session_state.page == "DISEASE RECOGNITION":
-    st.title("🔍 Disease Recognition")
+    st.title("🔍 Detect Disease from Leaf")
 
-    uploaded_file = st.file_uploader("Upload a potato leaf image", type=["jpg", "jpeg", "png"])
-    
+    uploaded_file = st.file_uploader("Upload an image of a potato leaf", type=["jpg", "jpeg", "png"])
+
     if uploaded_file is not None:
         image = Image.open(uploaded_file).convert("RGB")
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        if st.button("Predict"):
-            if st.session_state.model is None:
-                st.session_state.model = load_model()
+        # Load model if not loaded
+        if st.session_state.model is None:
+            download_model()
+            st.session_state.model = tf.keras.models.load_model(MODEL_PATH)
 
-            model = st.session_state.model
-            img = image.resize((256, 256))
-            img_array = tf.keras.preprocessing.image.img_to_array(img)
-            img_array = np.expand_dims(img_array, axis=0) / 255.0
+        # Preprocess image
+        img_resized = image.resize((256, 256))
+        img_array = tf.keras.preprocessing.image.img_to_array(img_resized)
+        img_array = np.expand_dims(img_array, axis=0) / 255.0
 
-            prediction = model.predict(img_array)[0]
-            classes = ["Early Blight", "Healthy", "Late Blight"]
-            predicted_class = classes[np.argmax(prediction)]
-            confidence = np.max(prediction)
+        # Predict
+        prediction = st.session_state.model.predict(img_array)
+        class_names = ['Early Blight', 'Late Blight', 'Healthy']
+        predicted_class = class_names[np.argmax(prediction)]
+        confidence = np.max(prediction) * 100
 
-            st.success(f"**Prediction:** {predicted_class} ({confidence * 100:.2f}% confidence)")
+        st.success(f"**Prediction:** {predicted_class}")
+        st.info(f"**Confidence:** {confidence:.2f}%")
 
-# PROJECT DETAILS
-elif st.session_state.page == "PROJECT DETAILS":
-    st.title("📁 Project Details")
-    st.markdown("""
-    ### About the Project
-    This app uses a Convolutional Neural Network (CNN) trained on a dataset of potato leaf images to classify:
-
-    - Early Blight
-    - Late Blight
-    - Healthy
-
-    ### Technologies Used
-    - TensorFlow / Keras
-    - Streamlit
-    - Google Drive (model hosting)
-
-    ### Team
-    Developed by [Your Team Name or Institution].
-    """)
+    else:
+        st.warning("Please upload an image to proceed.")
