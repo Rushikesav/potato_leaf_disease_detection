@@ -5,10 +5,6 @@ import gdown
 import os
 from PIL import Image
 
-# Theme detection
-user_theme = st.context.theme
-is_dark = user_theme and user_theme.base == "dark"
-
 # Navigation setup (Streamlit 1.46+)
 with st.navigation(position="top"):
     app_mode = st.selectbox("Select Page", ["HOME", "DISEASE RECOGNITION", "PROJECT DETAILS"])
@@ -41,15 +37,16 @@ def model_prediction(test_image):
 # Main layout
 main_content = st.empty()
 
-# Set background/text color from theme
-bg = user_theme.backgroundColor if user_theme else "#FFFFFF"
-txt = user_theme.textColor if user_theme else "#000000"
-
 img = Image.open("Disease.png")
 st.image(img)
 
 if app_mode == "HOME":
     main_content.empty()
+
+    user_theme = getattr(st.context, "theme", None)
+    bg = user_theme.backgroundColor if user_theme else "#FFFFFF"
+    txt = user_theme.textColor if user_theme else "#000000"
+
     st.markdown(f"""
         <div style='text-align: center;'>
             <h1 style='color: {txt};'>Plant Disease Detection System for Sustainable Agriculture</h1>
