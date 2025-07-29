@@ -1,146 +1,83 @@
 import streamlit as st
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
+from PIL import Image
 import gdown
 import os
-from PIL import Image
 
-# Navigation setup (Streamlit 1.46+)
-app_mode = st.navigation(
-    pages=[
-        {"label": "HOME", "icon": "🏠"},
-        {"label": "DISEASE RECOGNITION", "icon": "🔍"},
-        {"label": "PROJECT DETAILS", "icon": "📄"}
-    ],
-    position="top"
-)
+# Page options
+app_mode = st.sidebar.selectbox("Select Page", ["HOME", "DISEASE RECOGNITION", "PROJECT DETAILS"])
 
-# Model download
-file_id ="1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0"
-url ='https://drive.google.com/uc?id=1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0'
-model_path ="trained_plant_disease_model.keras"
+# Theme detection inside render block
+user_theme = st.runtime.scriptrunner.get_script_run_ctx().session_state.get("theme")
+is_dark = user_theme and user_theme.get("base") == "dark"
 
-if not os.path.exists(model_path):
-    st.warning("Downloading model from Google Drive...")
-    gdown.download(url, model_path, quiet=False)
+# Title based on selected page
+st.title("Potato Leaf Disease Detection")
 
-if os.path.exists(model_path):
-    file_size = os.path.getsize(model_path)
-    st.success(f"Model downloaded successfully! File size: {file_size} bytes")
-    if file_size < 89200000:
-        st.error("The downloaded file is too small. It might not be the correct model file.")
-else:
-    st.error("Model file was not found after download. Please check the URL or file permissions.")
+# Load model lazily
+@st.cache_resource
+def load_model():
+    model_path = "potato_disease_model.h5"
+    if not os.path.exists(model_path):
+        url = "https://drive.google.com/uc?id=1nErjXKv6pN6WKnf8yqaV-x5VeV1XIKvP"
+        gdown.download(url, model_path, quiet=False)
+    return tf.keras.models.load_model(model_path)
 
-def model_prediction(test_image):
-    model = tf.keras.models.load_model(model_path)
-    image = tf.keras.preprocessing.image.load_img(test_image,target_size=(128,128))
-    input_arr = tf.keras.preprocessing.image.img_to_array(image)
-    input_arr = np.array([input_arr])
-    predictions = model.predict(input_arr)
-    return np.argmax(predictions)
+# Prediction function
+def predict(image):
+    model = load_model()
+    image = image.resize((256, 256))
+    img_array = tf.keras.utils.img_to_array(image)
+    img_array = tf.expand_dims(img_array, 0) / 255.0
+    prediction = model.predict(img_array)
+    class_names = ['Early Blight', 'Late Blight', 'Healthy']
+    predicted_class = class_names[np.argmax(prediction)]
+    confidence = float(np.max(prediction))
+    return predicted_class, confidence
 
-# Main layout
-main_content = st.empty()
-
-img = Image.open("Disease.png")
-st.image(img)
-
+# HOME PAGE
 if app_mode == "HOME":
-    main_content.empty()
+    st.subheader("Welcome to the Potato Leaf Disease Detection App")
+    st.markdown("""
+    This application uses a deep learning model to classify potato leaf diseases.
 
-    user_theme = getattr(st.context, "theme", None)
-    bg = user_theme.backgroundColor if user_theme else "#FFFFFF"
-    txt = user_theme.textColor if user_theme else "#000000"
+    **How to use:**
+    1. Go to the **Disease Recognition** tab.
+    2. Upload a potato leaf image.
+    3. Get instant predictions with confidence.
+    """)
 
-    st.markdown(f"""
-        <div style='text-align: center;'>
-            <h1 style='color: {txt};'>Plant Disease Detection System for Sustainable Agriculture</h1>
-            <h3 style='color: blue;'>👉 Select 'Disease Recognition' from the top nav to get started! 👈</h3>
-        </div>
-    """, unsafe_allow_html=True)
-
-    moving_link = f"""
-        <style>
-            .glow {{
-                font-size: 20px;
-                color: #00FFFF;
-                text-align: center;
-                animation: glow-effect 1s infinite alternate;
-            }}
-            @keyframes glow-effect {{
-                from {{ text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF; }}
-                to {{ text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF; }}
-            }}
-        </style>
-        <marquee behavior="scroll" direction="left" scrollamount="5">
-            <span class="glow">✨</span>
-            <a href="https://github.com/Rushikesav/Test-data/tree/main/3.Potato%20Leaf%20Disease%20Detection/dataset/Test"
-               target="_blank" style="text-decoration: none; color: blue;">
-                Click here to download the test data to test the model! 🌿
-            </a>
-            <span class="glow">✨</span>
-        </marquee>
-    """
-    st.markdown(moving_link, unsafe_allow_html=True)
-
+# DISEASE RECOGNITION PAGE
 elif app_mode == "DISEASE RECOGNITION":
-    main_content.empty()
-    st.header("Plant Disease Detection System for Sustainable Agriculture")
-    st.markdown('This app detects the potato leaf disease with up to 93 percent accuracy')
-    test_image = st.file_uploader("Choose an Image:")
+    st.subheader("Upload a Potato Leaf Image")
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-    if st.button("Show Image"):
-        if test_image:
-            st.image(test_image, use_container_width=True)
-        else:
-            st.warning("Please upload an image first.")
+    if uploaded_file:
+        image = Image.open(uploaded_file)
+        st.image(image, caption='Uploaded Image', use_column_width=True)
+        if st.button("Predict"):
+            with st.spinner('Predicting...'):
+                label, confidence = predict(image)
+            st.success(f"Prediction: **{label}** with **{confidence * 100:.2f}%** confidence")
 
-    if st.button("Predict"):
-        if test_image:
-            st.snow()
-            st.write("Our Prediction:")
-            result_index = model_prediction(test_image)
-            class_names = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']
-            st.success(f"Model is predicting: **{class_names[result_index]}**")
-        else:
-            st.warning("Please upload an image first.")
-
+# PROJECT DETAILS PAGE
 elif app_mode == "PROJECT DETAILS":
-    main_content.empty()
-    st.title("Project Details and Model Working")
-
-    st.header("1. Introduction")
+    st.subheader("About this Project")
     st.markdown("""
-    The **Plant Disease Detection System** is an AI-powered tool designed to detect diseases in potato leaves.
-    Using machine learning techniques, particularly deep learning, the model achieves up to **93% accuracy** in identifying:
-    - **Early Blight**
-    - **Late Blight**
-    - **Healthy leaves**
+    - **Dataset**: Potato Leaf Disease Dataset
+    - **Model**: Convolutional Neural Network (CNN) using TensorFlow
+    - **Trained On**: Early Blight, Late Blight, and Healthy Leaf Images
+    - **Features**: Real-time image classification, confidence score, responsive UI
     """)
 
-    st.header("2. How the Model Works")
-    st.markdown("""
-    The model uses a **Convolutional Neural Network (CNN)**, a type of deep learning algorithm particularly effective for image classification tasks.
+# Footer styling based on theme
+st.markdown("""
+<style>
+footer {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
 
-    **Steps:**
-    1. **Preprocessing**: The uploaded image is resized to **128x128 pixels**.
-    2. **Model Prediction**:
-       - The model predicts the likelihood of the image belonging to each disease category.
-       - The category with the highest probability is selected as the prediction.
-    3. **Output**: The predicted class (e.g., **Potato___Early_blight**) is displayed.
-    """)
-
-    st.header("3. Technologies Used")
-    st.markdown("""
-    - **TensorFlow/Keras** for deep learning.
-    - **Streamlit** for interactive web UI.
-    - **Google Drive** with **gdown** for model downloading.
-    """)
-
-    st.header("4. Future Enhancements")
-    st.markdown("""
-    - **Expand to Other Crops**
-    - **Real-time Detection**
-    - **User Feedback Loop**
-    """)
+if is_dark:
+    st.markdown("""<style>body { background-color: #0E1117; color: white; }</style>""", unsafe_allow_html=True)
+    
