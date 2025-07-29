@@ -6,8 +6,14 @@ import os
 from PIL import Image
 
 # Navigation setup (Streamlit 1.46+)
-with st.navigation(position="top"):
-    app_mode = st.selectbox("Select Page", ["HOME", "DISEASE RECOGNITION", "PROJECT DETAILS"])
+app_mode = st.navigation(
+    pages=[
+        {"label": "HOME", "icon": "🏠"},
+        {"label": "DISEASE RECOGNITION", "icon": "🔍"},
+        {"label": "PROJECT DETAILS", "icon": "📄"}
+    ],
+    position="top"
+)
 
 # Model download
 file_id ="1Dtc6aopehnUtOW78tpaTXGoaABwFjBo0"
